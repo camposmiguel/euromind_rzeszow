@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.miguelcr.fragments.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <!-- Create a 2nd option for the menu with id 'action_change' -->
+    <item
+        android:id="@+id/action_change"
+        android:title="Change card"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_refresh" />
+</menu>
