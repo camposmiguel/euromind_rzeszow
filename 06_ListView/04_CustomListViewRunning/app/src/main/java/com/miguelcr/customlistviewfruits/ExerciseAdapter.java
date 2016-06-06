@@ -1,7 +1,6 @@
 package com.miguelcr.customlistviewfruits;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,13 @@ import java.util.List;
 /**
  * Created by miguelcampos on 6/6/16.
  */
-public class FruitAdapter extends ArrayAdapter<Fruit>{
+public class ExerciseAdapter extends ArrayAdapter<Exercise>{
     Context ctx;
-    List<Fruit> items;
+    List<Exercise> items;
 
 
-    public FruitAdapter(Context ctx, List<Fruit> items) {
-        super(ctx,R.layout.fruit_item,items);
+    public ExerciseAdapter(Context ctx, List<Exercise> items) {
+        super(ctx,R.layout.exercise_item,items);
         this.ctx = ctx;
         this.items = items;
     }
@@ -30,22 +29,25 @@ public class FruitAdapter extends ArrayAdapter<Fruit>{
         LayoutInflater inflater = (LayoutInflater) ctx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View v = inflater.inflate(R.layout.fruit_item, parent, false);
+        View v = inflater.inflate(R.layout.exercise_item, parent, false);
 
         // 1. Get the layout components
-        ImageView imageViewIcon = (ImageView)v.findViewById(R.id.iconFruit);
-        TextView textViewName = (TextView)v.findViewById(R.id.nameFruit);
-        TextView textViewPrice = (TextView)v.findViewById(R.id.priceFruit);
+        ImageView imageViewIcon = (ImageView)v.findViewById(R.id.iconExercise);
+        TextView textViewName = (TextView)v.findViewById(R.id.nameExercise);
+        TextView textViewDuration = (TextView)v.findViewById(R.id.durationExercise);
+        TextView textViewDistance = (TextView)v.findViewById(R.id.distanceExercise);
 
         // 2. Get the current item info
-        Fruit current = items.get(position);
+        Exercise current = items.get(position);
         String name = current.getName();
         int icon = current.getIcon();
-        float price = current.getPrice();
+        int duration = current.getDuration();
+        int distance = current.getDistance();
 
         // 3. Set the info in the View Components
         textViewName.setText(name);
-        textViewPrice.setText(String.valueOf(price));
+        textViewDuration.setText(String.valueOf(duration)+"'");
+        textViewDistance.setText(String.valueOf(distance/1000)+" Km");
         imageViewIcon.setImageResource(icon);
 
         return v;

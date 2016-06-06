@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
         items.add(new Fruit(R.drawable.ic_raspberry,"Raspberry",2.10f));
 
         // 3. Adapter
+        FruitAdapter adapter = new FruitAdapter(this,items);
 
+        // 4. Connect LisView AND Adapter
+        lista.setAdapter(adapter);
 
     }
 }
