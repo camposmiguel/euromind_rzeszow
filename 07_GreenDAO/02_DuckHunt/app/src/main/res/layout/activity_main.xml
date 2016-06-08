@@ -6,6 +6,18 @@
     tools:context="com.miguelcr.duckhunt.MainActivity"
     android:background="@drawable/bg_sky_pixel">
 
+    <TextView
+        android:id="@+id/countDucks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="30sp"
+        android:layout_marginRight="30sp"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Ducks: 0" />
+
     <ImageView
         android:id="@+id/duckImage"
         android:layout_width="wrap_content"
