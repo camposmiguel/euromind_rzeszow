@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_sky_pixel"
+    android:padding="@dimen/activity_vertical_margin"
+    tools:context="com.miguelcr.duckhunt.LoginActivity">
+
+    <TextView
+        android:id="@+id/logoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="DuckHunt"
+        android:textSize="50sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_centerVertical="true"
+        />
+
+    <EditText
+        android:id="@+id/nickName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nickname..."
+        android:padding="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/logoText"
+        android:background="@drawable/bg_nickname"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:text="Start Game"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:onClick="doLogin"
+        android:background="@drawable/bg_button"
+        android:padding="10dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
