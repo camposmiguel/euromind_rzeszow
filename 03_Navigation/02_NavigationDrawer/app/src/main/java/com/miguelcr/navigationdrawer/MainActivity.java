@@ -100,6 +100,10 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        if(f!=null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container,f).commit();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

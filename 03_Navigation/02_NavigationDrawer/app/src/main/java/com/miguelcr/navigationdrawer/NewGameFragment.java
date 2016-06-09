@@ -127,11 +127,14 @@ public class NewGameFragment extends Fragment {
                 User u = userDao.queryBuilder().where(
                         UserDao.Properties.Nickname.eq(currentNick))
                         .unique();
-                if(u!=null && u.getPoints()>counter) {
+
+                if(u!=null) {
                     // When user exists and points are lower than in the previous
                     // game
-                    u.setPoints(counter);
-                    userDao.update(u);
+                    if(u.getPoints()>counter) {
+                        u.setPoints(counter);
+                        userDao.update(u);
+                    }
                 } else  {
                     // When user doesn't exist
                     u = new User();
