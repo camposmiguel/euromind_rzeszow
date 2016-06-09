@@ -20,6 +20,10 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import de.greenrobot.daoexample.DaoSession;
+import de.greenrobot.daoexample.User;
+import de.greenrobot.daoexample.UserDao;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +37,7 @@ public class NewGameFragment extends Fragment {
     int duckSoundId;
     AudioAttributes aa;
     AlertDialog.Builder builder;
+    DaoSession daoSession;
 
     public NewGameFragment() {
         // Required empty public constructor
@@ -91,10 +96,10 @@ public class NewGameFragment extends Fragment {
                 startCountDown();
             }
         });
-        builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
-                getActivity().finish();
+
             }
         });
         // Set other dialog properties
@@ -113,6 +118,28 @@ public class NewGameFragment extends Fragment {
             }
 
             public void onFinish() {
+                daoSession = DatabaseConnection.getConnection(getContext());
+                UserDao userDao = daoSession.getUserDao();
+                // Get the current nickname
+                SharedPreferences settings = getActivity()
+                        .getSharedPreferences(LoginActivity.PREFS_NAME, 0);
+                String currentNick = settings.getString("nicknameUser", "");
+                User u = userDao.queryBuilder().where(
+                        UserDao.Properties.Nickname.eq(currentNick))
+                        .unique();
+                if(u!=null && u.getPoints()>counter) {
+                    // When user exists and points are lower than in the previous
+                    // game
+                    u.setPoints(counter);
+                    userDao.update(u);
+                } else  {
+                    // When user doesn't exist
+                    u = new User();
+                    u.setNickname(currentNick);
+                    u.setPoints(counter);
+                    userDao.insert(u);
+                }
+
                 tvTimer.setText("Game over!");
                 builder.setTitle("Game Over! Yo have hunted "+counter+" ducks. " +
                         "Do you want to play again?");
@@ -130,9 +157,11 @@ public class NewGameFragment extends Fragment {
         int width = size.x;
         int height = size.y;
 
+        int toolbarHeight = MainActivity.toolbarHeight;
+
         random = new Random();
         int randomX = random.nextInt(width-duck.getWidth() + 1);
-        int randomY = random.nextInt(height-duck.getHeight() + 1);
+        int randomY = random.nextInt(height-duck.getHeight()-toolbarHeight + 1);
         duck.setX(randomX);
         duck.setY(randomY);
 
