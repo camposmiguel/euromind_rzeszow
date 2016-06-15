@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_vertical_margin"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/imageViewAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:src="@drawable/boy"/>
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_toRightOf="@+id/imageViewAvatar"
+        android:layout_alignTop="@+id/imageViewAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Michael" />
+
+    <TextView
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:id="@+id/textViewAge"
+        android:layout_toRightOf="@id/textViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#999"
+        android:text="21 years old" />
+
+    <Button
+        android:id="@+id/buttonLocation"
+        android:layout_below="@+id/textViewAge"
+        android:layout_alignLeft="@id/textViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show location"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button_primary_rounded"
+        android:drawableLeft="@drawable/marker"/>
+
+</RelativeLayout>
