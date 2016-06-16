@@ -14,16 +14,43 @@ import com.miguelcr.usercrud.greendao.UserDao;
 public class NewUserActivity extends AppCompatActivity {
     EditText etName, etAge, etLocation;
     RadioGroup rgSex;
+    long idUser;
+    UserDao userDao;
+    User u;
+    RadioButton rbMale, rbFemale;
+    String action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
+        Bundle extras = getIntent().getExtras();
+        action = extras.getString("action");
+
         etName = (EditText)findViewById(R.id.editTextName);
         etAge = (EditText)findViewById(R.id.editTextAge);
         etLocation = (EditText)findViewById(R.id.editTextLocation);
         rgSex = (RadioGroup) findViewById(R.id.radioSex);
+        rbMale = (RadioButton) findViewById(R.id.sexMale);
+        rbFemale = (RadioButton) findViewById(R.id.sexFemale);
+
+        if(action!=null && action.equals("edit")) {
+            idUser = extras.getLong("idUser");
+            DaoSession dbSession = DatabaseConnection.getConnection(this);
+            userDao = dbSession.getUserDao();
+            u = userDao.load(idUser);
+
+            etName.setText(u.getName());
+            etAge.setText(String.valueOf(u.getAge()));
+            etLocation.setText(String.valueOf(u.getLocation()));
+            if(u.getSex().equals("m")) {
+                rbMale.setChecked(true);
+            } else {
+                rbFemale.setChecked(true);
+            }
+
+        }
     }
 
     public void createUser(View view) {
@@ -47,7 +74,12 @@ public class NewUserActivity extends AppCompatActivity {
         newUser.setAge(age);
         newUser.setLocation(location);
         newUser.setSex(sex);
-        userDao.insert(newUser);
+        if(action.equals("edit")) {
+            newUser.setId(u.getId());
+            userDao.update(newUser);
+        } else {
+            userDao.insert(newUser);
+        }
 
         // close the Activity
         finish();

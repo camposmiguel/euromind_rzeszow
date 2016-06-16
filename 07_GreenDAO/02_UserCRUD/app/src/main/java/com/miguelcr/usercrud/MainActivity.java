@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnUserClickListen
             public void onClick(View view) {
                 // Launch the AddUserActivity
                 Intent i = new Intent(MainActivity.this,NewUserActivity.class);
+                i.putExtra("action","add");
                 startActivity(i);
             }
         });
@@ -107,7 +108,10 @@ public class MainActivity extends AppCompatActivity implements OnUserClickListen
 
     @Override
     public void onUserEdit(User u) {
-
+        Intent i = new Intent(this, NewUserActivity.class);
+        i.putExtra("action","edit");
+        i.putExtra("idUser",u.getId());
+        startActivity(i);
     }
 
 }
