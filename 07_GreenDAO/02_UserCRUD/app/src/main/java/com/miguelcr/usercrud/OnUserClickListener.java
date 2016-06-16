@@ -8,4 +8,6 @@ import com.miguelcr.usercrud.greendao.User;
 public interface OnUserClickListener {
 
     public void onUserClick(User u);
+    public void onUserDelete(User u);
+    public void onUserEdit(User u);
 }

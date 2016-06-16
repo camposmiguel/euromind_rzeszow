@@ -46,6 +46,7 @@ public class NewUserActivity extends AppCompatActivity {
         newUser.setName(name);
         newUser.setAge(age);
         newUser.setLocation(location);
+        newUser.setSex(sex);
         userDao.insert(newUser);
 
         // close the Activity

@@ -1,14 +1,20 @@
 package com.miguelcr.usercrud;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.miguelcr.usercrud.greendao.DaoSession;
 import com.miguelcr.usercrud.greendao.User;
@@ -26,6 +32,7 @@ public class UserFragment extends Fragment {
     List<User> userList;
     MyUserRecyclerViewAdapter adapter;
     UserDao userDao;
+    AlertDialog dialog;
 
     public UserFragment() {
     }
@@ -67,9 +74,15 @@ public class UserFragment extends Fragment {
             DaoSession dbSession = DatabaseConnection.getConnection(getActivity());
             userDao = dbSession.getUserDao();
             userList = userDao.loadAll();
-            adapter = new MyUserRecyclerViewAdapter(userList, mListener);
+            adapter = new MyUserRecyclerViewAdapter(userList, mListener, getActivity());
             recyclerView.setAdapter(adapter);
+
+            // Connect the recyclerview with ContextMenu
+            registerForContextMenu(recyclerView);
         }
+
+
+
         return view;
     }
 
@@ -95,8 +108,23 @@ public class UserFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        refreshUserList();
+    }
+
+    public void refreshUserList() {
         userList.clear();
         userList.addAll(userDao.loadAll());
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu_user, menu);
+
+    }
+
+
+
 }

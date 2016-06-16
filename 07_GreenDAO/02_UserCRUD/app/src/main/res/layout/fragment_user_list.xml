@@ -6,8 +6,7 @@
     android:name="com.miguelcr.usercrud.UserFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:padding="@dimen/activity_vertical_margin"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.miguelcr.usercrud.UserFragment"
     tools:listitem="@layout/fragment_user" />
