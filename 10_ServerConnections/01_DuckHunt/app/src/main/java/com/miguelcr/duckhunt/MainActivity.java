@@ -1,22 +1,28 @@
 package com.miguelcr.duckhunt;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.w3c.dom.Text;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     int duckSoundId;
     AudioAttributes aa;
     AlertDialog.Builder builder;
+
+    JSONArray response = new JSONArray();
+    ProgressDialog progressDialog;
+
 
 
     @Override
@@ -139,5 +149,52 @@ public class MainActivity extends AppCompatActivity {
 
         // Load sound of duck
         duckSoundId = soundEffects.load(this,R.raw.cuak,1);
+    }
+
+    private class MyRankingTask extends AsyncTask<Void, Void, Void> {
+        URL url = null;
+        HttpURLConnection urlConnection = null;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+
+                url=new URL("http://rest.miguelcr.com/killduck/user?nickname="+prefs.getString("nombre",null)+"&points="+prefs.getString("puntos",null));
+                urlConnection = (HttpURLConnection) url.openConnection();
+                String responseString = readStream(urlConnection.getInputStream());
+                response = new JSONArray(responseString);
+                Log.e("tamanio",String.valueOf(response.length()));
+
+                String userId=response.getJSONObject(0).getString("id");
+                String userRegis=response.getJSONObject(0).getString("nickname");
+                String userPoint=response.getJSONObject(0).getString("points");
+                Log.e("usuarios",userRegis);
+                usuarioactual=new PojoUsuario(userId,userRegis,userPoint);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(RankingActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("Cargando ranking...");
+            progressDialog.setMax(100);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            new UsuariosRankingTask().execute();
+        }
     }
 }
