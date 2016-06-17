@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.w3c.dom.Text;
 
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
