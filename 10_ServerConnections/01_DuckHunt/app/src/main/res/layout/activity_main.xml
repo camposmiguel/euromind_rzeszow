@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.miguelcr.duckhunt.MainActivity"
+    android:background="@drawable/bg_sky_pixel">
+
+
+    <TextView
+        android:id="@id/nickName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30sp"
+        android:layout_marginLeft="30sp"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:text="Nick"
+        android:background="@drawable/bg_button"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/countDucks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="35sp"
+        android:layout_marginRight="30sp"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Ducks: 0" />
+
+    <TextView
+        android:id="@+id/countDownTimer"
+        android:layout_below="@+id/countDucks"
+        android:layout_marginRight="30sp"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="01:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/duckImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="duckClicked"
+        android:src="@drawable/duck"
+        />
+</RelativeLayout>
