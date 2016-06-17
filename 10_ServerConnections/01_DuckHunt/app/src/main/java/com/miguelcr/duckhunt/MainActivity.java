@@ -19,8 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     JSONArray response = new JSONArray();
     ProgressDialog progressDialog;
-
+    PojoUser currentUser;
 
 
     @Override
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 String userRegis=response.getJSONObject(0).getString("nickname");
                 String userPoint=response.getJSONObject(0).getString("points");
                 Log.e("usuarios",userRegis);
-                usuarioactual=new PojoUsuario(userId,userRegis,userPoint);
+                currentUser = new PojoUser(userId,userRegis,userPoint);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -185,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(RankingActivity.this);
+            progressDialog = new ProgressDialog(MainActivity.this);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage("Cargando ranking...");
             progressDialog.setMax(100);
@@ -197,5 +202,28 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             new UsuariosRankingTask().execute();
         }
+    }
+
+    private String readStream(InputStream in) {
+        BufferedReader reader = null;
+        StringBuffer response = new StringBuffer();
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return response.toString();
     }
 }

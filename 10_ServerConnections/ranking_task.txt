@@ -1,0 +1,35 @@
+private class UsuariosRankingTask extends AsyncTask<Void, Void, ArrayList<PojoUsuario>> {
+      ArrayList<PojoUsuario> listaUsers=new ArrayList<>();
+      URL url = null;
+      HttpURLConnection urlConnection = null;
+
+      @Override
+      protected ArrayList<PojoUsuario> doInBackground(Void... params) {
+          try {
+              url=new URL("http://rest.miguelcr.com/killduck/ranking/");
+
+          urlConnection = (HttpURLConnection) url.openConnection();
+          String responseString = readStream(urlConnection.getInputStream());
+          response = new JSONArray(responseString);
+          Log.e("tamanio",String.valueOf(response.length()));
+
+          for(int i=0;i<response.length();i++){
+              String userId=response.getJSONObject(i).getString("id");
+              String userRegis=response.getJSONObject(i).getString("nickname");
+              String userPoint=response.getJSONObject(i).getString("points");
+              Log.e("usuarios",userRegis);
+              PojoUsuario user=new PojoUsuario(userId,userRegis,userPoint);
+              listaUsers.add(user);
+          }
+
+          } catch (MalformedURLException e) {
+              e.printStackTrace();
+          } catch (JSONException e) {
+              e.printStackTrace();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+
+
+          return listaUsers;
+      }
