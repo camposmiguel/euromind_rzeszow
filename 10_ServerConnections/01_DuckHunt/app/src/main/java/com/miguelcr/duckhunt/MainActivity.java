@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     JSONArray response = new JSONArray();
     ProgressDialog progressDialog;
     PojoUser currentUser;
+    SharedPreferences settings;
 
 
     @Override
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         tvTimer = (TextView) findViewById(R.id.countDownTimer);
 
         // Get the value of nickname
-        SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
+        settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
         String userNick = settings.getString("nicknameUser", "");
         nick.setText(userNick);
 
@@ -107,10 +108,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
+
                 tvTimer.setText("Game over!");
                 builder.setTitle("Game Over! Yo have hunted "+counter+" ducks. " +
                         "Do you want to play again?");
                 builder.show();
+
+                // Save the number of ducks hunted
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("points", String.valueOf(counter));
+                editor.commit();
+
+                // Save the result in server
+                new MyRankingTask().execute();
             }
         }.start();
 
@@ -166,16 +176,15 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
-                url=new URL("http://rest.miguelcr.com/killduck/user?nickname="+prefs.getString("nombre",null)+"&points="+prefs.getString("puntos",null));
+                url=new URL("http://rest.miguelcr.com/killduck/user?nickname="+settings.getString("nicknameUser",null)+"&points="+settings.getString("points",null));
                 urlConnection = (HttpURLConnection) url.openConnection();
                 String responseString = readStream(urlConnection.getInputStream());
                 response = new JSONArray(responseString);
-                Log.e("tamanio",String.valueOf(response.length()));
 
                 String userId=response.getJSONObject(0).getString("id");
                 String userRegis=response.getJSONObject(0).getString("nickname");
                 String userPoint=response.getJSONObject(0).getString("points");
-                Log.e("usuarios",userRegis);
+
                 currentUser = new PojoUser(userId,userRegis,userPoint);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -190,17 +199,12 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("Cargando ranking...");
-            progressDialog.setMax(100);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            new UsuariosRankingTask().execute();
+
         }
     }
 
