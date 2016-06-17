@@ -1,10 +1,18 @@
 package com.miguelcr.duckhunt;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "DuckPrefFile";
@@ -21,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     int gunSoundId;
     AudioAttributes aa;
     EditText nickname;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +72,8 @@ public class LoginActivity extends AppCompatActivity {
 
             soundEffects.play(gunSoundId, 1, 1, 1, 1, 1);
 
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
+            new RegisterTask().execute(nickname.getText().toString());
+
         }
     }
 
@@ -76,4 +93,49 @@ public class LoginActivity extends AppCompatActivity {
         // Load sound of duck
         gunSoundId = soundEffects.load(this,R.raw.gun,1);
     }
+
+    private class RegisterTask extends AsyncTask<String, Void, Void> {
+
+
+        URL url = null;
+        HttpURLConnection urlConnection = null;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                url=new URL("http://rest.miguelcr.com/killduck/register?nickname="+ params[0]);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(urlConnection.getInputStream()));
+
+                in.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(LoginActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("Wait, ducks are eating...");
+            progressDialog.setMax(100);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+    }
+
 }
